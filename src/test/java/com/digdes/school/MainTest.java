@@ -24,7 +24,7 @@ class MainTest {
     }
 
     @Test
-    public void test1() {
+    public void testInsertValues() {
         JavaSchoolStarter starter = new JavaSchoolStarter();
 
         Map<String,Object> map = new HashMap<>();
@@ -46,5 +46,7 @@ class MainTest {
 
         Assertions.assertEquals(expected, actual);
     }
+
+
 
 }
