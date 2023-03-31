@@ -52,7 +52,6 @@ public class Lexer {
                 break;
             default:
                 pos = nextDelimeter();
-                System.out.println(pos);
         }
 
 
@@ -82,5 +81,4 @@ public class Lexer {
         }
         return cmd.length();
     }
-
 }

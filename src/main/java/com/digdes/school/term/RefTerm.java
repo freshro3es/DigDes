@@ -2,14 +2,14 @@ package com.digdes.school.term;
 
 import com.digdes.school.sql.SqlRow;
 
-public class BoolTerm extends Term<Boolean> {
-
-    public BoolTerm(Boolean value) {
+public class RefTerm extends Term<String> {
+    public RefTerm(String value) {
         super(value);
     }
 
     @Override
     public Object getValue(SqlRow sqlRow) {
-        return value;
+        return sqlRow.get(value);
     }
+
 }

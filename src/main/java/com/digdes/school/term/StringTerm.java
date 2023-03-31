@@ -2,9 +2,10 @@ package com.digdes.school.term;
 
 import com.digdes.school.sql.SqlRow;
 
-public class BoolTerm extends Term<Boolean> {
+public class StringTerm extends Term<String>{
 
-    public BoolTerm(Boolean value) {
+
+    public StringTerm(String value) {
         super(value);
     }
 
