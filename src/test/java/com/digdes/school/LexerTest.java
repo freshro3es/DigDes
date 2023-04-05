@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class LexerTest {
 
     @Test
@@ -104,5 +102,24 @@ class LexerTest {
         Term<String> actual = TermFactory.createStringTerm(token);
 
         assert actual == null;
+    }
+
+    @Test
+    void valuesParseString() {
+
+        List<String> expected = Arrays.asList("UPDATE", "VALUES", "'age'", ">=", "30", ",", "'lastName'", "=", "'п'");
+
+        String cmd = "    UPDATE  VALUES 'age'>=30, 'lastName'='п'    ";
+        Lexer lexer = new Lexer(cmd);
+        List<String> actual = null;
+        try {
+            actual = lexer.readAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Assertions.fail("unexpected exception");
+        }
+
+        Assertions.assertEquals(expected, actual);
+        Assertions.assertFalse(lexer.hasNext());
     }
 }

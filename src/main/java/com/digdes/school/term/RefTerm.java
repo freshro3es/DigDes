@@ -11,5 +11,4 @@ public class RefTerm extends Term<String> {
     public Object getValue(SqlRow sqlRow) {
         return sqlRow.get(value);
     }
-
 }

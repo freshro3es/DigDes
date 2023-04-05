@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class Lexer {
 
-    private String cmd;
+    private final String cmd;
     private int pos;
 
     public Lexer(String cmd) {
@@ -51,13 +51,22 @@ public class Lexer {
                 }
                 break;
             default:
-                pos = nextDelimeter();
+                pos = nextDelimiter();
         }
 
 
         String token = cmd.substring(start, pos);
         skipSpaces();
         return token;
+    }
+
+    public boolean isNext(String token) throws Exception {
+        int start = pos;
+        try {
+            return token.equalsIgnoreCase(read());
+        } finally {
+            pos = start;
+        }
     }
 
     public boolean hasNext() {
@@ -74,8 +83,8 @@ public class Lexer {
         return cmd.charAt(pos++);
     }
 
-    private int nextDelimeter() {
-        Matcher m = Pattern.compile("[<>=! ']").matcher(cmd);
+    private int nextDelimiter() {
+        Matcher m = Pattern.compile("[<>=! ',]").matcher(cmd);
         if(m.find(pos)) {
             return m.start();
         }

@@ -14,7 +14,11 @@ class ExprTest {
     @Test
     void createExpr() {
         Op op = new IlikeOp();
-        op.apply("Петров", "%П%");
+        try {
+            op.apply("Петров", "%П%");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
@@ -23,10 +27,10 @@ class ExprTest {
         List<String> tokens;
         try {
             tokens = new Lexer(cmd).readAll();
-            Expr expr = Expr.createExpr(tokens);
+            Expr expr = Expr.create(tokens);
             List<SqlRow> table = CreateTestTable.generate(8);
-            for (int i=0; i<table.size(); i++) {
-                System.out.println(expr.evaluate(table.get(i)));
+            for (SqlRow sqlRow : table) {
+                System.out.println(expr.evaluate(sqlRow));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -35,7 +39,6 @@ class ExprTest {
 
     @Test
     void getTable() {
-        List<SqlRow> sqlRows = CreateTestTable.generate(50);
-        CreateTestTable.show(sqlRows);
+
     }
 }

@@ -4,7 +4,6 @@ import com.digdes.school.sql.SqlRow;
 
 public class StringTerm extends Term<String>{
 
-
     public StringTerm(String value) {
         super(value);
     }

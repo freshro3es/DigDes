@@ -14,8 +14,7 @@ public class OpFactory {
             case "ilike" -> new IlikeOp();
             case "or" -> new OrOp();
             case "and" -> new AndOp();
-            default -> null;
+            default -> throw new IllegalArgumentException("Unexpected op token: " + cmd);
         };
     }
-
 }

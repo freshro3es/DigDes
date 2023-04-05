@@ -1,26 +1,25 @@
 package com.digdes.school.expr;
 
 import com.digdes.school.op.Op;
+import com.digdes.school.op.OpFactory;
 import com.digdes.school.sql.SqlRow;
 import com.digdes.school.term.Term;
 import com.digdes.school.term.TermFactory;
 
-import static com.digdes.school.op.OpFactory.createOp;
+import java.util.List;
 
-public class SimpleExpr {
+public record SimpleExpr(Term<?> left, Op op, Term<?> right) {
 
-    private Term<?> left;
-    private Op op;
-    private Term<?> right;
-
-
-    public SimpleExpr(Term<?> left, Op op, Term<?> right) {
-        this.left = left;
-        this.op = op;
-        this.right = right;
+    public boolean evaluate(SqlRow sqlRow) throws Exception {
+        return op.apply(left.getValue(sqlRow), right.getValue(sqlRow));
     }
 
-    public boolean evaluate(SqlRow sqlRow) {
-        return op.apply(left.getValue(sqlRow), right.getValue(sqlRow));
+    public static SimpleExpr create(List<String> tokens) {
+        return new SimpleExpr(
+            TermFactory.createRefTerm(tokens.remove(0)),
+            OpFactory.createOp(tokens.remove(0)),
+            TermFactory.createTerm(tokens.remove(0))
+        );
+
     }
 }
