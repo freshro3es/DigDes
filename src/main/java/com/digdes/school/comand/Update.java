@@ -11,8 +11,17 @@ public record Update(Values values, Where where) implements Command {
 
     @Override
     public List<Map<String, Object>> evaluate(List<Map<String, Object>> table) throws Exception {
-        for (int i=0; i< table.size(); i++) {
-            if (where.evaluate((SqlRow) table.get(i))) {
+        if (table.isEmpty()) {
+            throw new IllegalArgumentException("Update command token, but table is empty");
+        }
+        if (where!=null) {
+            for (int i=0; i< table.size(); i++) {
+                if (where.evaluate((SqlRow) table.get(i))) {
+                    table.set(i, values.evaluate((SqlRow) table.get(i)));
+                }
+            }
+        } else {
+            for (int i=0; i< table.size(); i++) {
                 table.set(i, values.evaluate((SqlRow) table.get(i)));
             }
         }
@@ -20,12 +29,12 @@ public record Update(Values values, Where where) implements Command {
     }
 
     public static Update create(Lexer lexer) throws Exception{
-        if (!"values".equalsIgnoreCase(lexer.read())) {
+        if (!lexer.hasNext() || !"values".equalsIgnoreCase(lexer.read())) {
             throw new RuntimeException("Update command token, but not values");
         }
         List<String> values = new ArrayList<>();
         while (lexer.hasNext()){
-            if (lexer.isNext("where")) {
+            if (!lexer.isNext("where")) {
                 values.add(lexer.read());
             } else {
                 lexer.read();
@@ -33,11 +42,19 @@ public record Update(Values values, Where where) implements Command {
             }
         }
         System.out.println(values);
-        List<String> where = new ArrayList<>();
-        while (lexer.hasNext()){
-            where.add(lexer.read());
+        if (values.isEmpty()) {
+            throw new IllegalArgumentException("Values to change expected, nothing token");
         }
-        System.out.println(where);
-        return new Update(new Values(values), Where.create(where));
+        if (values.size()%4!=3) {
+            throw new IllegalArgumentException("Invalid expression in values statement");
+        }
+        if (lexer.hasNext()) {
+            List<String> where = lexer.readAll();
+            System.out.println(where);
+            return new Update(new Values(values), Where.create(where));
+        } else {
+            System.out.println("where is null");
+            return new Update(new Values(values), null);
+        }
     }
 }

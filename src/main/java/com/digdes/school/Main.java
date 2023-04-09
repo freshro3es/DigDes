@@ -6,23 +6,25 @@ public class Main {
 
     public static void main(String... args){
         JavaSchoolStarter starter = new JavaSchoolStarter();
-//      //Изменение значения которое выше записывали
-//      List<Map<String,Object>> result2 = starter.execute("    UpDaTE VALUES 'active'=false, 'cost'=10.1 where 'id'=3  ");
-//      //Получение всех данных из коллекции (т.е. в данном примере вернется 1 запись)
-//      List<Map<String,Object>> result3 = starter.execute(" SELeCT *  ");
-//      CreateTestTable.show(starter.execute("    Insert VALUES 'id'=3, 'lastName'='Федор', 'cost'=1.0  "));
-//      CreateTestTable.show(starter.execute("    UpDaTE VALUES 'active'=false, 'cost'=10.1 where 'id'=3  "));
-        //insert vaLuEs 'id'=4 'lastName'='Афанасьев', 'cost'=5.5, 'age'=16, 'active'=false
         String cmd = null;
         while (!"exit".equals(cmd)) {
             Scanner in = new Scanner(System.in);
-            System.out.print("Input a command: ");
+            //System.out.print("Input a command: ");
             cmd = in.nextLine();
             try {
                 JavaSchoolStarter.show(starter.execute(cmd));
             } catch (Exception e) {
                 System.err.println(e.getMessage());
+                //throw new RuntimeException(e);
             }
         }
     }
 }
+
+//insert values 'id'=4, 'lastName'='Качаев', 'age'=0, 'cost'=100.0, 'active'=false
+//insert values 'id' = 8 , 'lastName' = 'Минуллин' , 'age' = 23 , 'cost' = 50.0 , 'active' = true
+//insert values 'id'=6, 'lastName'='Корзинина', 'age'=17, 'cost'=23.0, 'active'=false
+//insert values 'id'=10, 'lastName'='Абрамов', 'age'=40, 'cost'=150.0, 'active'=true
+//update values 'active'=false
+//update values 'age'=null where 'lastName'='Качаев'
+//select where 'age'!=23

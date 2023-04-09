@@ -1,7 +1,9 @@
 package com.digdes.school;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,19 +19,28 @@ public class Lexer {
         skipSpaces();
     }
 
-    public List<String> readAll() throws Exception {
-        List<String> tokens = new ArrayList<>();
+    public static Lexer create(String cmd) {
+        if (0==cmd.length()) {
+            throw new IllegalArgumentException("Command expected, empty line token");
+        }
+        return new Lexer(cmd);
+    }
 
+    public List<String> readAll() throws Exception {
+        if (!checkBrackets()) {
+            throw new IllegalArgumentException("An unequal number of brackets was accepted");
+        }
+
+        List<String> tokens = new ArrayList<>();
         while (hasNext()) {
            tokens.add(read());
         }
+        System.out.println(tokens);
         return tokens;
     }
 
     public String read() throws Exception {
-
         int start = pos;
-
         switch (readChar()) {
             case '\'':
                 int index = cmd.indexOf('\'', pos);
@@ -53,8 +64,6 @@ public class Lexer {
             default:
                 pos = nextDelimiter();
         }
-
-
         String token = cmd.substring(start, pos);
         skipSpaces();
         return token;
@@ -84,10 +93,23 @@ public class Lexer {
     }
 
     private int nextDelimiter() {
-        Matcher m = Pattern.compile("[<>=! ',]").matcher(cmd);
+        Matcher m = Pattern.compile("[<>=! ',()]").matcher(cmd);
         if(m.find(pos)) {
             return m.start();
         }
         return cmd.length();
+    }
+
+    private boolean checkBrackets() throws Exception {
+        int start = pos;
+        Map<String, Integer> brackets = new HashMap<>(Map.of("(", 0, ")", 0));
+        while (hasNext()) {
+            String token = read();
+            if ("(".equals(token) || ")".equals(token)) {
+                brackets.put(token, brackets.get(token)+1);
+            }
+        }
+        pos = start;
+        return brackets.get("(").equals(brackets.get(")"));
     }
 }

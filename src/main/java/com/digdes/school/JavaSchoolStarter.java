@@ -15,31 +15,32 @@ public class JavaSchoolStarter {
     }
 
     public List<Map<String,Object>> execute(String cmd) throws Exception{
-        Lexer lexer = new Lexer(cmd);
+        Lexer lexer = Lexer.create(cmd);
         Command command = createCmd(lexer);
         table = command.evaluate(table);
-
         return table;
     }
 
     public static Command createCmd(Lexer lexer) throws Exception {
         String token = lexer.read().toLowerCase();
-        System.out.println(token);
         return switch (token) {
             case "select" -> Select.create(lexer);
             case "insert" -> Insert.create(lexer);
             case "update" -> Update.create(lexer);
             case "delete" -> Delete.create(lexer);
-            default -> null;
+            default -> throw new IllegalArgumentException("Command \"" + token + "\" does not exist");
         };
     }
 
     public static void show(List<Map<String,Object>> table) {
-        SqlRow sqlRow = (SqlRow) table.get(0);
-        for ( String key : sqlRow.keySet() ) {
+        for ( String key : new SqlRow().keySet() ) {
             System.out.print( key + ", " );
         }
         System.out.println();
+        if (table.isEmpty()) {
+            return;
+        }
+        SqlRow sqlRow;
         for (Map<String, Object> stringObjectMap : table) {
             sqlRow = (SqlRow) stringObjectMap;
             for (String key : sqlRow.keySet()) {

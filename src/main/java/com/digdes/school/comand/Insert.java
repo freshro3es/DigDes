@@ -15,7 +15,7 @@ public record Insert(Values values) implements Command {
     }
 
     public static Insert create(Lexer lexer) throws Exception{
-        if (!"values".equalsIgnoreCase(lexer.read())) {
+        if (!lexer.hasNext() || !"values".equalsIgnoreCase(lexer.read())) {
             throw new RuntimeException("Insert token, values is not");
         }
         List<String> values = new ArrayList<>();

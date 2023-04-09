@@ -12,7 +12,7 @@ public class SqlRow extends HashMap<String, Object> {
     @Override
     public Object put(String key, Object value) {
         if (containsKey(key)) {
-            if (!validate(key, value)) {
+            if (!validate(key, value) && value!=null) {
                 throw new IllegalArgumentException("Value \"" + value + "\" does not match to the \"" + key + "\" column value type");
             }
             super.put(key, value);

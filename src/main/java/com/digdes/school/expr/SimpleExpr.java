@@ -15,6 +15,9 @@ public record SimpleExpr(Term<?> left, Op op, Term<?> right) {
     }
 
     public static SimpleExpr create(List<String> tokens) {
+        if (tokens.size()<3) {
+            throw new IllegalArgumentException("Invalid expression in where statement");
+        }
         return new SimpleExpr(
             TermFactory.createRefTerm(tokens.remove(0)),
             OpFactory.createOp(tokens.remove(0)),

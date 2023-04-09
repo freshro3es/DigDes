@@ -10,15 +10,25 @@ public record Ass(SimpleAss left, Ass right) {
 
     public static Ass createAss(List<String> tokens) {
         String key = ((String) Objects.requireNonNull(TermFactory.createTerm(tokens.remove(0))).getValue(null)).toLowerCase();
-        Object value = Objects.requireNonNull(TermFactory.createTerm(tokens.remove(1))).getValue(null);
+        Object value;
+        if (!"null".equals(tokens.get(1))) {
+            value = Objects.requireNonNull(TermFactory.createTerm(tokens.remove(1))).getValue(null);
+        } else {
+            value = null;
+            tokens.remove(1);
+        }
         SimpleAss left;
         if ("=".equals(tokens.remove(0))) {
             left = new SimpleAss(key, value);
         } else {
             throw new RuntimeException("Assignment operator expected, but another token");
         }
-        if (!tokens.isEmpty() && ",".equals(tokens.remove(0))) {
-            return new Ass(left, createAss(tokens));
+        if (!tokens.isEmpty()) {
+            if (",".equals(tokens.remove(0))) {
+                return new Ass(left, createAss(tokens));
+            } else {
+                throw new IllegalArgumentException("Invalid expression in values statement: \",\" expected");
+            }
         }
         return new Ass(left, null);
     }
