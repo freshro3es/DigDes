@@ -14,18 +14,19 @@ public record Update(Values values, Where where) implements Command {
         if (table.isEmpty()) {
             throw new IllegalArgumentException("Update command token, but table is empty");
         }
+        List<Map<String, Object>> result = new ArrayList<>();
         if (where!=null) {
             for (int i=0; i< table.size(); i++) {
                 if (where.evaluate((SqlRow) table.get(i))) {
-                    table.set(i, values.evaluate((SqlRow) table.get(i)));
+                    result.add(table.set(i, values.evaluate((SqlRow) table.get(i))));
                 }
             }
         } else {
             for (int i=0; i< table.size(); i++) {
-                table.set(i, values.evaluate((SqlRow) table.get(i)));
+                result.add(table.set(i, values.evaluate((SqlRow) table.get(i))));
             }
         }
-        return table;
+        return result;
     }
 
     public static Update create(Lexer lexer) throws Exception{

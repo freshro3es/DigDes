@@ -7,7 +7,7 @@ import java.util.*;
 
 public class JavaSchoolStarter {
 
-    private List<Map<String,Object>> table = new ArrayList<>();
+    public List<Map<String,Object>> table = new ArrayList<>();
 
     //Дефолтный конструктор
     public JavaSchoolStarter(){
@@ -17,8 +17,7 @@ public class JavaSchoolStarter {
     public List<Map<String,Object>> execute(String cmd) throws Exception{
         Lexer lexer = Lexer.create(cmd);
         Command command = createCmd(lexer);
-        table = command.evaluate(table);
-        return table;
+        return command.evaluate(table);
     }
 
     public static Command createCmd(Lexer lexer) throws Exception {

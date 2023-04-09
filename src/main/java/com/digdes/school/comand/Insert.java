@@ -1,6 +1,7 @@
 package com.digdes.school.comand;
 
 import com.digdes.school.Lexer;
+import com.digdes.school.sql.SqlRow;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +11,10 @@ public record Insert(Values values) implements Command {
 
     @Override
     public List<Map<String, Object>> evaluate(List<Map<String, Object>> table) {
-        table.add(values.evaluate());
-        return table;
+        SqlRow sqlRow = values.evaluate();
+        List<Map<String, Object>> result = new ArrayList<>(List.of(sqlRow));
+        table.add(sqlRow);
+        return result;
     }
 
     public static Insert create(Lexer lexer) throws Exception{
