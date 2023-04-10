@@ -7,7 +7,7 @@ import java.util.*;
 
 public class JavaSchoolStarter {
 
-    public List<Map<String,Object>> table = new ArrayList<>();
+    private List<Map<String,Object>> table = new ArrayList<>();
 
     //Дефолтный конструктор
     public JavaSchoolStarter(){
